@@ -44,6 +44,7 @@ namespace AudioCreation
         private AudioDeviceOutputNode deviceOutputNode;
         private AudioDeviceInputNode deviceInputNode;
         private DeviceInformationCollection outputDevices;
+        private DeviceInformationCollection inputDevices;
 
         public Scenario2_DeviceCapture()
         {
@@ -174,6 +175,14 @@ namespace AudioCreation
             {
                 outputDevicesListBox.Items.Add(device.Name);
             }
+
+            inputDevicesListBox.Items.Clear();
+            inputDevices = await DeviceInformation.FindAllAsync(MediaDevice.GetAudioCaptureSelector());
+            inputDevicesListBox.Items.Add("-- Pick input device --");
+            foreach (var device in inputDevices)
+            {
+                inputDevicesListBox.Items.Add(device.Name);
+            }
         }
 
         private async Task CreateAudioGraph()
@@ -209,7 +218,7 @@ namespace AudioCreation
             outputDeviceContainer.Background = new SolidColorBrush(Colors.Green);
 
             // Create a device input node using the default audio input device
-            CreateAudioDeviceInputNodeResult deviceInputNodeResult = await graph.CreateDeviceInputNodeAsync(MediaCategory.Other);
+            CreateAudioDeviceInputNodeResult deviceInputNodeResult = await graph.CreateDeviceInputNodeAsync(MediaCategory.Communications, graph.EncodingProperties, inputDevices[inputDevicesListBox.SelectedIndex - 1]);
 
             if (deviceInputNodeResult.Status != AudioDeviceNodeCreationStatus.Success)
             {
@@ -271,8 +280,33 @@ namespace AudioCreation
             }
             else
             {
-                createGraphButton.IsEnabled = true;
+                createGraphButton.IsEnabled = inputDevicesListBox.SelectedIndex != 0;
                 outputDevice.Foreground = new SolidColorBrush(Colors.White);
+            }
+        }
+
+        private void inputDevicesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (inputDevicesListBox.SelectedIndex == 0)
+            {
+                createGraphButton.IsEnabled = false;
+                inputDevice.Foreground = new SolidColorBrush(Color.FromArgb(255, 110, 110, 110));
+                inputDeviceContainer.Background = new SolidColorBrush(Color.FromArgb(255, 74, 74, 74));
+                fileButton.IsEnabled = false;
+                fileButton.Background = new SolidColorBrush(Color.FromArgb(255, 74, 74, 74));
+                outputDeviceContainer.Background = new SolidColorBrush(Color.FromArgb(255, 74, 74, 74));
+
+                // Destroy graph
+                if (graph != null)
+                {
+                    graph.Dispose();
+                    graph = null;
+                }
+            }
+            else
+            {
+                createGraphButton.IsEnabled = outputDevicesListBox.SelectedIndex != 0;
+                inputDevice.Foreground = new SolidColorBrush(Colors.White);
             }
         }
     }

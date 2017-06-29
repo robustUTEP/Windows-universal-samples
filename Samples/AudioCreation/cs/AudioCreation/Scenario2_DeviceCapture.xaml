@@ -27,13 +27,15 @@
                         <AdaptiveTrigger MinWindowWidth="0"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="inputDeviceContainer.(RelativePanel.Below)" Value="outputDevicesListBox" />
+                        <Setter Target="inputDevicesListBox.(RelativePanel.Below)" Value="outputDevicesListBox" />
+                        <Setter Target="inputDeviceContainer.(RelativePanel.Below)" Value="inputDevicesListBox" />
                         <Setter Target="audioPipe1.(RelativePanel.RightOf)" Value="inputDeviceContainer" />
                         <Setter Target="audioPipe2.(RelativePanel.RightOf)" Value="inputDeviceContainer" />
                         <Setter Target="audioPipe1.(RelativePanel.AlignVerticalCenterWith)" Value="inputDeviceContainer" />
                         <Setter Target="audioPipe2.(RelativePanel.AlignVerticalCenterWith)" Value="inputDeviceContainer" />
 
                         <Setter Target="outputDeviceContainer.(RelativePanel.RightOf)" Value="audioPipe1" />
+                        <Setter Target="outputDeviceContainer.(RelativePanel.Below)" Value="inputDevicesListBox" />
                         <Setter Target="fileButton.(RelativePanel.RightOf)" Value="audioPipe1" />
 
                         <Setter Target="fileButton.(RelativePanel.Below)" Value="outputDeviceContainer" />
@@ -61,8 +63,9 @@
             <ScrollViewer Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
                 <RelativePanel HorizontalAlignment="Stretch">
                     <ListBox x:Name="outputDevicesListBox" IsEnabled="True" Margin="0,20,15,20" HorizontalAlignment="Stretch" MaxWidth="600" SelectionChanged="outputDevicesListBox_SelectionChanged"/>
+                    <ListBox x:Name="inputDevicesListBox" IsEnabled="True" Margin="0,20,15,20" HorizontalAlignment="Stretch" MaxWidth="600" SelectionChanged="inputDevicesListBox_SelectionChanged"/>
                     <Border x:Name="inputDeviceContainer" BorderThickness="0" Background="#4A4A4A" Margin="0,67,0,0" MinWidth="120" MinHeight="45">
-                        <TextBlock Text="Input Device" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="inputDevice" Text="Input Device" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     </Border>
                     <Rectangle x:Name="audioPipe1" Margin="0,67,0,0" Height="10" MinWidth="150" Fill="#313131" HorizontalAlignment="Stretch">
                         <Rectangle.RenderTransform>
@@ -81,7 +84,7 @@
                         </Rectangle.RenderTransform>
                     </Rectangle>
 
-                    <Border x:Name="outputDeviceContainer" BorderThickness="0" Background="#4A4A4A" Margin="8,150,0,0" MinWidth="120" MinHeight="45">
+                    <Border x:Name="outputDeviceContainer" BorderThickness="0" Background="#4A4A4A" Margin="8,20,0,0" MinWidth="120" MinHeight="45">
                         <TextBlock x:Name="outputDevice" Text="Output Device" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#6E6E6E" />
                     </Border>
                     <!--<Button x:Name="deviceButton" Content="Output Device" Margin="8,150,0,0" MinWidth="120" MinHeight="45" IsEnabled="False"/>-->
